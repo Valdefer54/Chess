@@ -3,7 +3,7 @@ class king:
         self.color = color
         self.position = position
         self.name = "king"
-        self.symbol = "♔" if color == "white" else "♚"
+        self.symbol = "♚" if color == "white" else "♔"
 
     def gmove(self, new_position):
         x_diff = abs(new_position[0] - self.position[0])
