@@ -1,5 +1,5 @@
 from pieces.rook import rook
-from pieces.knight import knight
+from pieces.knight import Knight
 from pieces.bishop import bishop
 from pieces.queen import queen
 from pieces.king import king
@@ -11,8 +11,8 @@ class Board:
         #white pieces instantiation
         self.white_rook_1 = rook("white", (0, 0))
         self.white_rook_2 = rook("white", (0, 7))
-        self.white_knight_1 = knight("white", (0, 1))
-        self.white_knight_2 = knight("white", (0, 6))
+        self.white_knight_1 = Knight("white", (0, 1))
+        self.white_knight_2 = Knight("white", (0, 6))
         self.white_bishop_1 = bishop("white", (0, 2))
         self.white_bishop_2 = bishop("white", (0, 5))
         self.white_queen = queen("white", (0, 3))
@@ -29,8 +29,8 @@ class Board:
         #black pieces instantiation
         self.black_rook_1 = rook("black", (7, 0))
         self.black_rook_2 = rook("black", (7, 7))
-        self.black_knight_1 = knight("black", (7, 1))
-        self.black_knight_2 = knight("black", (7, 6))
+        self.black_knight_1 = Knight("black", (7, 1))
+        self.black_knight_2 = Knight("black", (7, 6))
         self.black_bishop_1 = bishop("black", (7, 2))
         self.black_bishop_2 = bishop("black", (7, 5))
         self.black_queen = queen("black", (7, 3))
@@ -85,7 +85,7 @@ class Board:
             dest_row, dest_col = dest_pos
             target_piece = self.startingBoard[dest_row][dest_col]
 
-            if piece.name == "pawn":
+            if piece.name == "Pawn":
                 if move_type == "forward":
                     if not target_piece:
                         valid_moves.append(dest_pos)
@@ -96,7 +96,9 @@ class Board:
                 elif move_type == "capture":
                     if target_piece and target_piece.color != piece.color:
                         valid_moves.append(dest_pos)
-            # Add logic for other pieces here
+            elif piece.name == "Knight":
+                if not target_piece or target_piece.color != piece.color:
+                    valid_moves.append(dest_pos)
 
         return valid_moves
 

@@ -2,7 +2,7 @@ class rook:
     def __init__(self, color, position):
         self.color = color
         self.position = position
-        self.name = "rook"
+        self.name = "Rook"
         self.symbol = "♜" if color == "white" else "♖"
 
     def move(self, new_position):
@@ -13,5 +13,5 @@ class rook:
         if (x_diff == 0 and y_diff > 0) or (y_diff == 0 and x_diff > 0):
             self.position = new_position
             return True
-
+        
         return False

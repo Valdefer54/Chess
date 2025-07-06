@@ -1,9 +1,23 @@
-class knight:
+class Knight:
     def __init__(self, color, position):
         self.color = color
         self.position = position
-        self.name = "knight"
+        self.name = "Knight"
         self.symbol = "♞" if color == "white" else "♘"
+
+    def get_theoretical_moves(self):
+        moves = []
+        row, col = self.position
+        possible_moves = [
+            (row - 2, col - 1), (row - 2, col + 1),
+            (row - 1, col - 2), (row - 1, col + 2),
+            (row + 1, col - 2), (row + 1, col + 2),
+            (row + 2, col - 1), (row + 2, col + 1)
+        ]
+        for move in possible_moves:
+            if 0 <= move[0] < 8 and 0 <= move[1] < 8:
+                moves.append(("move", move))
+        return moves
 
     def move(self, new_position):
         x_diff = abs(new_position[0] - self.position[0])

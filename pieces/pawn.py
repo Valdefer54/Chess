@@ -2,7 +2,7 @@ class Pawn:
     def __init__(self, color, position):
         self.color = color
         self.position = position
-        self.name = "pawn"
+        self.name = "Pawn"
         self.symbol = "♟" if color == "white" else "♙"
         self.has_moved = False # Used to determine if a double move is allowed
         # White moves from low row index to high, Black from high to low

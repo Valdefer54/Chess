@@ -2,7 +2,7 @@ class queen:
     def __init__(self, color, position):
         self.color = color
         self.position = position
-        self.name = "queen"
+        self.name = "Queen"
         self.symbol = "♛" if color == "white" else "♕"
 
     def move(self, new_position):

@@ -2,7 +2,7 @@ class king:
     def __init__(self, color, position):
         self.color = color
         self.position = position
-        self.name = "king"
+        self.name = "King"
         self.symbol = "♚" if color == "white" else "♔"
 
     def gmove(self, new_position):
