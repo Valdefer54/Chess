@@ -2,7 +2,7 @@ class bishop:
     def __init__(self, color, position):
         self.color = color
         self.position = position
-        self.name = "bishop"
+        self.name = "Bishop"
         self.symbol = "♝" if color == "white" else "♗"
     
     def move(self, new_position):
