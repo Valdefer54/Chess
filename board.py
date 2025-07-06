@@ -17,14 +17,14 @@ class Board:
         self.white_bishop_2 = bishop("white", (0, 5))
         self.white_queen = queen("white", (0, 3))
         self.white_king = king("white", (0, 4))
-        self.white_pawn_1 = Pawn("white", (1, 0))
-        self.white_pawn_2 = Pawn("white", (1, 1))
-        self.white_pawn_3 = Pawn("white", (1, 2))
-        self.white_pawn_4 = Pawn("white", (1, 3))
-        self.white_pawn_5 = Pawn("white", (1, 4))
-        self.white_pawn_6 = Pawn("white", (1, 5))
-        self.white_pawn_7 = Pawn("white", (1, 6))
-        self.white_pawn_8 = Pawn("white", (1, 7))
+        self.white_pawn_1 = Pawn("white", (6, 0))
+        self.white_pawn_2 = Pawn("white", (6, 1))
+        self.white_pawn_3 = Pawn("white", (6, 2))
+        self.white_pawn_4 = Pawn("white", (6, 3))
+        self.white_pawn_5 = Pawn("white", (6, 4))
+        self.white_pawn_6 = Pawn("white", (6, 5))
+        self.white_pawn_7 = Pawn("white", (6, 6))
+        self.white_pawn_8 = Pawn("white", (6, 7))
 
         #black pieces instantiation
         self.black_rook_1 = rook("black", (7, 0))
@@ -35,14 +35,14 @@ class Board:
         self.black_bishop_2 = bishop("black", (7, 5))
         self.black_queen = queen("black", (7, 3))
         self.black_king = king("black", (7, 4))
-        self.black_pawn_1 = Pawn("black", (6, 0))
-        self.black_pawn_2 = Pawn("black", (6, 1))
-        self.black_pawn_3 = Pawn("black", (6, 2))
-        self.black_pawn_4 = Pawn("black", (6, 3))
-        self.black_pawn_5 = Pawn("black", (6, 4))
-        self.black_pawn_6 = Pawn("black", (6, 5))
-        self.black_pawn_7 = Pawn("black", (6, 6))
-        self.black_pawn_8 = Pawn("black", (6, 7))
+        self.black_pawn_1 = Pawn("black", (1, 0))
+        self.black_pawn_2 = Pawn("black", (1, 1))
+        self.black_pawn_3 = Pawn("black", (1, 2))
+        self.black_pawn_4 = Pawn("black", (1, 3))
+        self.black_pawn_5 = Pawn("black", (1, 4))
+        self.black_pawn_6 = Pawn("black", (1, 5))
+        self.black_pawn_7 = Pawn("black", (1, 6))
+        self.black_pawn_8 = Pawn("black", (1, 7))
 
         # Initialize the chess pieces with their respective colors and positions at the start of the game
         self.pieces = [
@@ -102,19 +102,23 @@ class Board:
 
         return valid_moves
 
-    def move_piece(self, from_pos, to_pos):
+    def move_piece(self, from_pos, to_pos, current_player_color):
+        piece_to_move = self.startingBoard[from_pos[0]][from_pos[1]]
+
+        if not piece_to_move:
+            return False # No piece at from_pos
+
+        if piece_to_move.color != current_player_color:
+            return False # Piece does not belong to current player
+
         valid_moves = self.get_valid_moves(from_pos)
         if to_pos not in valid_moves:
-            print("Invalid move.")
             return False
 
-        piece_to_move = self.startingBoard[from_pos[0]][from_pos[1]]
-        
         # Handle capture
         target_piece = self.startingBoard[to_pos[0]][to_pos[1]]
         if target_piece:
-            # In a real game, you would handle captured pieces (e.g., add to a list)
-            print(f"Captured {target_piece.name}!")
+            pass # Removed print statement
 
         # Move the piece
         self.startingBoard[to_pos[0]][to_pos[1]] = piece_to_move
@@ -125,5 +129,4 @@ class Board:
         if piece_to_move.name == "pawn":
             piece_to_move.has_moved = True
 
-        print(f"Moved {piece_to_move.name} from {from_pos} to {to_pos}")
         return True

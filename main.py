@@ -30,43 +30,33 @@ def parse_move_input(move_input):
     except Exception:
         return None, None
 
-if __name__ == "__main__":
+def run_chess_game(input_function=input, print_function=print):
     board = Board()
     board.set_pieces_board()
     current_player = "white"
 
     while True:
         board.boardPrinter()
-        print(f"Turno del jugador: {current_player}")
-        move_input = input(f"({current_player}) Introduce tu movimiento (ej. 'e2 e4') o escribe 'exit' para salir: ")
+        print_function(f"Turno del jugador: {current_player}")
+        move_input = input_function(f"({current_player}) Introduce tu movimiento (ej. 'e2 e4') o escribe 'exit' para salir: ")
 
         if move_input.lower() == 'exit':
-            print("Saliendo del juego.")
+            print_function("Saliendo del juego.")
             break
 
         from_pos, to_pos = parse_move_input(move_input)
 
         if not from_pos or not to_pos:
-            print("--- Formato de movimiento inválido. Usa notación algebraica (ej. 'e2 e4'). ---")
+            print_function("--- Movimiento inválido. Inténtalo de nuevo. ---")
             continue
 
-        # Validación 1: ¿Hay una pieza en la casilla de origen?
-        piece = board.startingBoard[from_pos[0]][from_pos[1]]
-        if not piece:
-            print(f"--- No hay ninguna pieza en la casilla {move_input.split()[0]}. ---")
-            continue
-
-        # Validación 2: ¿La pieza pertenece al jugador actual?
-        if piece.color != current_player:
-            print(f"--- La pieza en {move_input.split()[0]} no es tuya. ---")
-            continue
-
-        # Validación 3 y movimiento: El método move_piece ya valida y ejecuta.
-        if board.move_piece(from_pos, to_pos):
-            # Si el movimiento fue exitoso, cambia de jugador.
+        if board.move_piece(from_pos, to_pos, current_player):
             current_player = "black" if current_player == "white" else "white"
+            print_function(f"Moved {board.startingBoard[to_pos[0]][to_pos[1]].name} from {from_pos} to {to_pos}")
         else:
-            # El método move_piece ya imprime el error específico.
-            print("--- Inténtalo de nuevo. ---")
+            print_function("--- Movimiento inválido. Inténtalo de nuevo. ---")
 
-        print("\n" + "="*40 + "\n")
+        print_function("\n" + "="*40 + "\n")
+
+if __name__ == "__main__":
+    run_chess_game()

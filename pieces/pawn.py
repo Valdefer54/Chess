@@ -6,7 +6,7 @@ class Pawn:
         self.symbol = "♟" if color == "white" else "♙"
         self.has_moved = False # Used to determine if a double move is allowed
         # White moves from low row index to high, Black from high to low
-        self.direction = 1 if self.color == "white" else -1
+        self.direction = -1 if self.color == "white" else 1
 
     def get_theoretical_moves(self):
         """
