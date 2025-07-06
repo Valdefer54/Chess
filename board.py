@@ -126,7 +126,15 @@ class Board:
         
         # Update piece's internal state
         piece_to_move.position = to_pos
-        if piece_to_move.name == "pawn":
+        if piece_to_move.name == "Pawn":
+            piece_to_move.has_moved = True
+        elif piece_to_move.name == "King":
             piece_to_move.has_moved = True
 
         return True
+
+    def get_king_has_moved(self, color):
+        for piece in self.pieces:
+            if piece.name == "King" and piece.color == color:
+                return piece.has_moved
+        return False # Should not happen if kings are always on the board

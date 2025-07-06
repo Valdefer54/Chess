@@ -4,6 +4,7 @@ class king:
         self.position = position
         self.name = "King"
         self.symbol = "♚" if color == "white" else "♔"
+        self.has_moved = False
 
     def gmove(self, new_position):
         x_diff = abs(new_position[0] - self.position[0])
