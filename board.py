@@ -99,6 +99,10 @@ class Board:
             elif piece.name == "Knight":
                 if not target_piece or target_piece.color != piece.color:
                     valid_moves.append(dest_pos)
+            elif piece.name in ["Rook", "Bishop", "Queen"]:
+                if self.is_path_clear(piece_pos, dest_pos):
+                    if not target_piece or target_piece.color != piece.color:
+                        valid_moves.append(dest_pos)
 
         return valid_moves
 
@@ -138,3 +142,31 @@ class Board:
             if piece.name == "King" and piece.color == color:
                 return piece.has_moved
         return False # Should not happen if kings are always on the board
+
+    def is_path_clear(self, start_pos, end_pos):
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+        
+        # Determine the direction of movement
+        row_step = 0
+        if end_row > start_row:
+            row_step = 1
+        elif end_row < start_row:
+            row_step = -1
+            
+        col_step = 0
+        if end_col > start_col:
+            col_step = 1
+        elif end_col < start_col:
+            col_step = -1
+            
+        current_row, current_col = start_row + row_step, start_col + col_step
+        
+        # Iterate over the path
+        while (current_row, current_col) != (end_row, end_col):
+            if self.startingBoard[current_row][current_col] is not None:
+                return False  # Path is blocked
+            current_row += row_step
+            current_col += col_step
+            
+        return True
