@@ -99,6 +99,9 @@ class Board:
             elif piece.name == "Knight":
                 if not target_piece or target_piece.color != piece.color:
                     valid_moves.append(dest_pos)
+            elif piece.name == "King":
+                if not target_piece or target_piece.color != piece.color:
+                    valid_moves.append(dest_pos)
             elif piece.name in ["Rook", "Bishop", "Queen"]:
                 if self.is_path_clear(piece_pos, dest_pos):
                     if not target_piece or target_piece.color != piece.color:
@@ -114,6 +117,11 @@ class Board:
 
         if piece_to_move.color != current_player_color:
             return False # Piece does not belong to current player
+
+        # Handle castling
+        if piece_to_move.name == "King" and abs(from_pos[1] - to_pos[1]) == 2:
+            side = "kingside" if to_pos[1] > from_pos[1] else "queenside"
+            return self.castle(piece_to_move.color, side)
 
         valid_moves = self.get_valid_moves(from_pos)
         if to_pos not in valid_moves:
@@ -134,6 +142,8 @@ class Board:
             piece_to_move.has_moved = True
         elif piece_to_move.name == "King":
             piece_to_move.has_moved = True
+        elif piece_to_move.name == "Rook":
+            piece_to_move.has_moved = True
 
         return True
 
@@ -142,6 +152,14 @@ class Board:
             if piece.name == "King" and piece.color == color:
                 return piece.has_moved
         return False # Should not happen if kings are always on the board
+
+    def get_rook_has_moved(self, color, side):
+        for piece in self.pieces:
+            if piece.name == "Rook" and piece.color == color:
+                if (side == "kingside" and (piece.initial_position == (0, 7) or piece.initial_position == (7, 7))) or \
+                   (side == "queenside" and (piece.initial_position == (0, 0) or piece.initial_position == (7, 0))):
+                    return piece.has_moved
+        return False # Should not happen if rooks are always on the board
 
     def is_path_clear(self, start_pos, end_pos):
         start_row, start_col = start_pos
@@ -169,4 +187,51 @@ class Board:
             current_row += row_step
             current_col += col_step
             
+        return True
+
+    def castle(self, color, side):
+        king_moved = self.get_king_has_moved(color)
+        rook_moved = self.get_rook_has_moved(color, side)
+
+        if king_moved or rook_moved:
+            return False
+
+        king_pos = None
+        rook_pos = None
+        for piece in self.pieces:
+            if piece.name == "King" and piece.color == color:
+                king_pos = piece.position
+            if piece.name == "Rook" and piece.color == color:
+                if (side == "kingside" and (piece.initial_position == (0, 7) or piece.initial_position == (7, 7))) or \
+                   (side == "queenside" and (piece.initial_position == (0, 0) or piece.initial_position == (7, 0))):
+                    rook_pos = piece.position
+
+        if not self.is_path_clear(king_pos, rook_pos):
+            return False
+
+        # Move pieces
+        if side == "kingside":
+            new_king_col = king_pos[1] + 2
+            new_rook_col = new_king_col - 1
+        else: # queenside
+            new_king_col = king_pos[1] - 2
+            new_rook_col = new_king_col + 1
+
+        king_row = king_pos[0]
+        
+        # Update board
+        king = self.startingBoard[king_pos[0]][king_pos[1]]
+        rook = self.startingBoard[rook_pos[0]][rook_pos[1]]
+        
+        self.startingBoard[king_row][new_king_col] = king
+        self.startingBoard[king_row][new_rook_col] = rook
+        self.startingBoard[king_pos[0]][king_pos[1]] = None
+        self.startingBoard[rook_pos[0]][rook_pos[1]] = None
+
+        # Update piece positions and has_moved
+        king.position = (king_row, new_king_col)
+        rook.position = (king_row, new_rook_col)
+        king.has_moved = True
+        rook.has_moved = True
+
         return True
