@@ -235,3 +235,26 @@ class Board:
         rook.has_moved = True
 
         return True
+
+    def is_in_check(self, color):
+        king_pos = None
+        for r in range(8):
+            for c in range(8):
+                piece = self.startingBoard[r][c]
+                if piece and piece.name == "King" and piece.color == color:
+                    king_pos = (r, c)
+                    break
+            if king_pos:
+                break
+
+        if not king_pos:
+            return False
+
+        for r in range(8):
+            for c in range(8):
+                piece = self.startingBoard[r][c]
+                if piece and piece.color != color:
+                    valid_moves = self.get_valid_moves((r, c))
+                    if king_pos in valid_moves:
+                        return True
+        return False

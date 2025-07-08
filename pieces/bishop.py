@@ -15,3 +15,17 @@ class bishop:
             return True
 
         return False
+
+    def get_theoretical_moves(self):
+        moves = []
+        for i in range(1, 8):
+            # Diagonal moves
+            if 0 <= self.position[0] + i < 8 and 0 <= self.position[1] + i < 8:
+                moves.append(("move", (self.position[0] + i, self.position[1] + i)))
+            if 0 <= self.position[0] + i < 8 and 0 <= self.position[1] - i < 8:
+                moves.append(("move", (self.position[0] + i, self.position[1] - i)))
+            if 0 <= self.position[0] - i < 8 and 0 <= self.position[1] + i < 8:
+                moves.append(("move", (self.position[0] - i, self.position[1] + i)))
+            if 0 <= self.position[0] - i < 8 and 0 <= self.position[1] - i < 8:
+                moves.append(("move", (self.position[0] - i, self.position[1] - i)))
+        return moves

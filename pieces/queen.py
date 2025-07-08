@@ -15,3 +15,23 @@ class queen:
             return True
 
         return False
+
+    def get_theoretical_moves(self):
+        moves = []
+        # Rook-like moves
+        for i in range(8):
+            if i != self.position[0]:
+                moves.append(("move", (i, self.position[1])))
+            if i != self.position[1]:
+                moves.append(("move", (self.position[0], i)))
+        # Bishop-like moves
+        for i in range(1, 8):
+            if 0 <= self.position[0] + i < 8 and 0 <= self.position[1] + i < 8:
+                moves.append(("move", (self.position[0] + i, self.position[1] + i)))
+            if 0 <= self.position[0] + i < 8 and 0 <= self.position[1] - i < 8:
+                moves.append(("move", (self.position[0] + i, self.position[1] - i)))
+            if 0 <= self.position[0] - i < 8 and 0 <= self.position[1] + i < 8:
+                moves.append(("move", (self.position[0] - i, self.position[1] + i)))
+            if 0 <= self.position[0] - i < 8 and 0 <= self.position[1] - i < 8:
+                moves.append(("move", (self.position[0] - i, self.position[1] - i)))
+        return moves
