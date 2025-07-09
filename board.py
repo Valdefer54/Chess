@@ -127,17 +127,25 @@ class Board:
         if to_pos not in valid_moves:
             return False
 
-        # Handle capture
+        # Store original state to revert if move is illegal
         target_piece = self.startingBoard[to_pos[0]][to_pos[1]]
-        if target_piece:
-            pass # Removed print statement
+        original_pos = piece_to_move.position
 
-        # Move the piece
+        # Make the move
         self.startingBoard[to_pos[0]][to_pos[1]] = piece_to_move
         self.startingBoard[from_pos[0]][from_pos[1]] = None
-        
-        # Update piece's internal state
         piece_to_move.position = to_pos
+
+        # If the move results in check, it's illegal. Revert and return False.
+        if self.is_in_check(current_player_color):
+            self.startingBoard[from_pos[0]][from_pos[1]] = piece_to_move
+            self.startingBoard[to_pos[0]][to_pos[1]] = target_piece
+            piece_to_move.position = original_pos
+            return False
+
+        # Handle capture
+        if target_piece:
+            pass # Removed print statement
         if piece_to_move.name == "Pawn":
             piece_to_move.has_moved = True
         elif piece_to_move.name == "King":
@@ -258,3 +266,32 @@ class Board:
                     if king_pos in valid_moves:
                         return True
         return False
+
+    def is_checkmate(self, color):
+        if not self.is_in_check(color):
+            return False
+
+        for r in range(8):
+            for c in range(8):
+                piece = self.startingBoard[r][c]
+                if piece and piece.color == color:
+                    valid_moves = self.get_valid_moves((r, c))
+                    for move in valid_moves:
+                        from_pos = (r, c)
+                        to_pos = move
+                        target_piece = self.startingBoard[to_pos[0]][to_pos[1]]
+                        
+                        # Temporarily make the move on the board
+                        self.startingBoard[to_pos[0]][to_pos[1]] = piece
+                        self.startingBoard[from_pos[0]][from_pos[1]] = None
+
+                        is_still_in_check = self.is_in_check(color)
+
+                        # Revert the board to its original state
+                        self.startingBoard[from_pos[0]][from_pos[1]] = piece
+                        self.startingBoard[to_pos[0]][to_pos[1]] = target_piece
+
+                        if not is_still_in_check:
+                            return False  # Found a legal move that gets out of check
+
+        return True

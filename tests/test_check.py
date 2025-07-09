@@ -37,3 +37,21 @@ def test_no_check_after_valid_move(board):
     board.move_piece((1, 4), (3, 4), "black") # Black Pawn e7 to e5
     assert not board.is_in_check("black")
     assert not board.is_in_check("white")
+
+def test_king_cannot_move_into_check(board):
+    # Clear the board
+    board.startingBoard = [[None for _ in range(8)] for _ in range(8)]
+
+    # Set up a scenario where the king is about to move into check
+    white_king_piece = king("white", (0, 6))
+    black_rook_piece = rook("black", (1, 7))
+    board.startingBoard[0][6] = white_king_piece
+    board.startingBoard[1][7] = black_rook_piece
+    board.pieces = [white_king_piece, black_rook_piece]
+
+    # Try to move the king into the rook's line of fire
+    assert not board.move_piece((0, 6), (0, 7), "white")
+    
+    # Ensure the king has not moved
+    assert board.startingBoard[0][6] == white_king_piece
+    assert board.startingBoard[0][7] is None
