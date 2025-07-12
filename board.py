@@ -281,15 +281,19 @@ class Board:
                         to_pos = move
                         target_piece = self.startingBoard[to_pos[0]][to_pos[1]]
                         
+                        original_pos = piece.position
+                        
                         # Temporarily make the move on the board
                         self.startingBoard[to_pos[0]][to_pos[1]] = piece
                         self.startingBoard[from_pos[0]][from_pos[1]] = None
+                        piece.position = to_pos
 
                         is_still_in_check = self.is_in_check(color)
 
                         # Revert the board to its original state
                         self.startingBoard[from_pos[0]][from_pos[1]] = piece
                         self.startingBoard[to_pos[0]][to_pos[1]] = target_piece
+                        piece.position = original_pos
 
                         if not is_still_in_check:
                             return False  # Found a legal move that gets out of check
